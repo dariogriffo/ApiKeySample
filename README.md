@@ -1,2 +1,7 @@
 # ApiKeySample
-An API Key api authentication/authorization example
+6 words cheatsheet:
+
+```
+AUTHENTICATION (WHO) => MIDDLEWARE
+AUTHORIZATION (WHAT)=> FILTERS
+```
