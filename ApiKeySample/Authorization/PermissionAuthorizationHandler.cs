@@ -1,4 +1,5 @@
-﻿using ApiKeySample.Security;
+﻿using System.Security.Claims;
+using ApiKeySample.Security;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ApiKeySample.Authorization;
@@ -10,7 +11,7 @@ public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionReq
         PermissionRequirement requirement)
     {
         //Here we check once the api key is authorized to do the action in the specific endpoint  
-        var permissionClaim =
+        Claim? permissionClaim =
             context.User.FindFirst(c =>
                 c.Type == CustomClaimTypes.Permission && c.Value.Equals(requirement.Permission));
 

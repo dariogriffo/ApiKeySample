@@ -40,7 +40,7 @@ public class ApiKeySchemeHandler : AuthenticationHandler<ApiKeySchemeOptions>
             return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), Scheme.Name));
         }
         
-        if (!Context.TryGetApiKeyFromQueryParams(out var value))
+        if (!Context.TryGetApiKeyFromQueryParams(out string value))
         {
             //Missing key the way we want it
             return AuthenticateResult.Fail("");
@@ -48,7 +48,7 @@ public class ApiKeySchemeHandler : AuthenticationHandler<ApiKeySchemeOptions>
 
         //Let's find our api key based on the parameter
         CancellationToken cancellationToken = Context.RequestAborted;
-        var apiKey = await _apiKeyStore.Get(value, cancellationToken);
+        ApiKey? apiKey = await _apiKeyStore.Get(value, cancellationToken);
 
         if (apiKey is null)
         {
@@ -58,8 +58,8 @@ public class ApiKeySchemeHandler : AuthenticationHandler<ApiKeySchemeOptions>
 
         // Generate AuthenticationTicket from the Identity and current authentication scheme
         IEnumerable<Claim> claims = _claimsProvider.GetClaimsFor(apiKey);
-        var claimsIdentity = new ClaimsIdentity(claims, nameof(ApiKeySchemeHandler));
-        var ticket = new AuthenticationTicket(new Customer(claimsIdentity, apiKey), this.Scheme.Name);
+        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, nameof(ApiKeySchemeHandler));
+        AuthenticationTicket ticket = new AuthenticationTicket(new Customer(claimsIdentity, apiKey), this.Scheme.Name);
 
         // Pass on the ticket to the middleware. All good, main door is open
         return AuthenticateResult.Success(ticket);

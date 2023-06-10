@@ -1,6 +1,6 @@
 using ApiKeySample.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 IServiceCollection services = builder.Services;
 
@@ -10,12 +10,13 @@ services
     .AddSwaggerGen(SwaggerConfigurator.Configure)
     .AddApiKey();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app
     .UseSwagger()
     .UseSwaggerUI()
     .UseAuthentication()
+    .UseAuthenticationShortCircuit()
     .UseAuthorization();
 
 app.MapControllers();

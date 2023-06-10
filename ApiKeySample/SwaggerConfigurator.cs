@@ -5,7 +5,7 @@ internal static class SwaggerConfigurator
 {
     internal static void Configure(SwaggerGenOptions x)
     {
-        var queryScheme = new OpenApiSecurityScheme
+        OpenApiSecurityScheme queryScheme = new OpenApiSecurityScheme
         {
             Name = "api_key",
             Description = "Api Key Authentication",
