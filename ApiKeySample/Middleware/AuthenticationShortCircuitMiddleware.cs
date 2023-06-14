@@ -1,8 +1,10 @@
+using System.Net;
+
 namespace ApiKeySample.Middleware;
 
 public class AuthenticationShortCircuitMiddleware
 {
-    private RequestDelegate _next;
+    private readonly RequestDelegate _next;
 
     public AuthenticationShortCircuitMiddleware(RequestDelegate next)
     {
@@ -13,9 +15,11 @@ public class AuthenticationShortCircuitMiddleware
     {
         if (context.User.Identity is not null && context.User.Identity.IsAuthenticated)
         {
-            await _next(context);       
+            await _next(context);
         }
-
-        context.Response.StatusCode = 401;
+        else
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+        }
     }
 }
